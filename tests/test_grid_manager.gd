@@ -133,3 +133,32 @@ func test_unknown_layer_does_not_crash_clear() -> void:
 	var mgr = _make_gm_with_layer()
 	mgr.clear_layer("nonexistent")
 	assert_true(true)
+
+# --- Validation ---
+
+func test_no_warnings_when_configured_correctly() -> void:
+	gm.cell_size = Vector2(64.0, 64.0)
+	gm.backend = GridManagerScript.Backend.CANVAS
+	assert_eq(gm._get_configuration_warnings().size(), 0)
+
+func test_warns_when_cell_size_is_zero() -> void:
+	gm.cell_size = Vector2.ZERO
+	var warnings: PackedStringArray = gm._get_configuration_warnings()
+	assert_gt(warnings.size(), 0)
+	assert_true(warnings[0].contains("cell_size"))
+
+func test_warns_when_tilemap_layer_missing_tileset() -> void:
+	gm.backend = GridManagerScript.Backend.TILEMAP
+	var layer := GridLayerScript.new()
+	layer.tile_set = null
+	gm.layers = {"attack": layer}
+	var warnings: PackedStringArray = gm._get_configuration_warnings()
+	assert_gt(warnings.size(), 0)
+	assert_true(warnings[0].contains("attack"))
+
+func test_no_tileset_warning_for_canvas_backend() -> void:
+	gm.backend = GridManagerScript.Backend.CANVAS
+	var layer := GridLayerScript.new()
+	layer.tile_set = null
+	gm.layers = {"attack": layer}
+	assert_eq(gm._get_configuration_warnings().size(), 0)
