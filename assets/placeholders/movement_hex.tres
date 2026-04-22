@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GridLayer" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://grid_layer.gd" id="1_abc13"]
+
+[resource]
+script = ExtResource("1_abc13")
+z_index = 0
+visible = true
+fill_color = Color(0.251, 0.878, 0.816, 0.5)
+border_color = Color(1, 1, 1, 0.8)
+border_width = 2.0
+tile_source_id = 0
+tile_atlas_coords = Vector2i(0, 0)
