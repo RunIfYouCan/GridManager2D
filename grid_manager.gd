@@ -10,7 +10,7 @@ enum TileShape { SQUARE, HEX }
 @export var grid_origin: Vector2 = Vector2.ZERO
 @export var layers: Dictionary = {}  # String -> GridLayer
 
-var _renderer: BaseRenderer = null
+var _renderer: Node = null
 var _layer_cells: Dictionary = {}  # String -> Array[Vector2i]
 
 func _ready() -> void:
