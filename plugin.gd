@@ -6,7 +6,7 @@ func _enter_tree() -> void:
 		"GridManager",
 		"Node2D",
 		preload("./grid_manager.gd"),
-		preload("./icon.svg")
+		null
 	)
 	add_custom_type(
 		"GridLayer",

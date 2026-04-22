@@ -1,8 +1,6 @@
 class_name CanvasRenderer
 extends Node2D
 
-const GridManagerScript = preload("res://grid_manager.gd")
-
 var _layer_cells: Dictionary = {}   # String -> Array[Vector2i]
 var _grid_config: GridConfig = null
 var _layers: Dictionary = {}        # String -> GridLayer
@@ -38,7 +36,7 @@ func _draw() -> void:
 
 func _draw_cell(cell: Vector2i, layer: GridLayer) -> void:
 	var center := _cell_center(cell, _grid_config)
-	if _grid_config.tile_shape == GridManagerScript.TileShape.SQUARE:
+	if _grid_config.tile_shape == GridManager.TileShape.SQUARE:
 		var rect := Rect2(center - _grid_config.cell_size * 0.5, _grid_config.cell_size)
 		draw_rect(rect, layer.fill_color)
 		if layer.border_width > 0.0:
@@ -52,7 +50,7 @@ func _draw_cell(cell: Vector2i, layer: GridLayer) -> void:
 			draw_polyline(closed, layer.border_color, layer.border_width)
 
 func _cell_center(cell: Vector2i, cfg: GridConfig) -> Vector2:
-	if cfg.tile_shape == GridManagerScript.TileShape.SQUARE:
+	if cfg.tile_shape == GridManager.TileShape.SQUARE:
 		return cfg.grid_origin + Vector2(
 			cell.x * cfg.cell_size.x + cfg.cell_size.x * 0.5,
 			cell.y * cfg.cell_size.y + cfg.cell_size.y * 0.5
