@@ -3,9 +3,9 @@ extends Node2D
 
 var _layer_cells: Dictionary = {}   # String -> Array[Vector2i]
 var _grid_config: GridConfig = null
-var _layers: Dictionary = {}        # String -> GridLayer
+var _layers: Array[GridLayer] = []
 
-func render(layer_cells: Dictionary, grid_config: GridConfig, layers: Dictionary) -> void:
+func render(layer_cells: Dictionary, grid_config: GridConfig, layers: Array[GridLayer]) -> void:
 	_layer_cells = layer_cells
 	_grid_config = grid_config
 	_layers = layers
@@ -13,7 +13,7 @@ func render(layer_cells: Dictionary, grid_config: GridConfig, layers: Dictionary
 
 func clear() -> void:
 	_layer_cells = {}
-	_layers = {}
+	_layers = []
 	_grid_config = null
 	queue_redraw()
 
@@ -21,16 +21,15 @@ func _draw() -> void:
 	if _grid_config == null:
 		return
 
-	var sorted_names: Array = _layers.keys()
-	sorted_names.sort_custom(func(a: String, b: String) -> bool:
-		return _layers[a].z_index < _layers[b].z_index
+	var sorted_layers := _layers.duplicate()
+	sorted_layers.sort_custom(func(a: GridLayer, b: GridLayer) -> bool:
+		return a.z_index < b.z_index
 	)
 
-	for layer_name in sorted_names:
-		var layer: GridLayer = _layers[layer_name]
+	for layer: GridLayer in sorted_layers:
 		if not layer.visible:
 			continue
-		var cells: Array = _layer_cells.get(layer_name, [])
+		var cells: Array = _layer_cells.get(layer.layer_name, [])
 		for cell in cells:
 			_draw_cell(cell, layer)
 

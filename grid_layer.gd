@@ -1,6 +1,8 @@
 class_name GridLayer
 extends Resource
 
+@export var layer_name: String = ""
+
 # Shared
 @export var z_index: int = 0
 @export var visible: bool = true

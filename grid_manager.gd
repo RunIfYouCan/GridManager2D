@@ -11,7 +11,7 @@ const _TileMapRendererScript = preload("./renderers/tilemap_renderer.gd")
 @export var tile_shape: TileShape = TileShape.SQUARE
 @export var cell_size: Vector2 = Vector2(64.0, 64.0)
 @export var grid_origin: Vector2 = Vector2.ZERO
-@export var layers: Dictionary = {}  # String -> GridLayer
+@export var layers: Array[GridLayer] = []
 
 var _renderer: Node = null
 var _layer_cells: Dictionary = {}  # String -> Array[Vector2i]
@@ -26,31 +26,34 @@ func _ready() -> void:
 # --- Public API ---
 
 func show_layer(layer_name: String, cells: Array[Vector2i]) -> void:
-	if not layers.has(layer_name):
+	var layer := _find_layer(layer_name)
+	if layer == null:
 		push_warning("GridManager: unknown layer '%s'" % layer_name)
 		return
 	_layer_cells[layer_name] = cells
-	layers[layer_name].visible = true
+	layer.visible = true
 	_refresh()
 
 func hide_layer(layer_name: String) -> void:
-	if not layers.has(layer_name):
+	var layer := _find_layer(layer_name)
+	if layer == null:
 		push_warning("GridManager: unknown layer '%s'" % layer_name)
 		return
-	layers[layer_name].visible = false
+	layer.visible = false
 	_refresh()
 
 func clear_layer(layer_name: String) -> void:
-	if not layers.has(layer_name):
+	var layer := _find_layer(layer_name)
+	if layer == null:
 		push_warning("GridManager: unknown layer '%s'" % layer_name)
 		return
 	_layer_cells.erase(layer_name)
-	layers[layer_name].visible = false
+	layer.visible = false
 	_refresh()
 
 func clear_all() -> void:
 	_layer_cells.clear()
-	for layer in layers.values():
+	for layer in layers:
 		layer.visible = false
 	_refresh()
 
@@ -65,6 +68,12 @@ func cell_to_world(cell: Vector2i) -> Vector2:
 	return _cell_to_world_hex(cell)
 
 # --- Private ---
+
+func _find_layer(layer_name: String) -> GridLayer:
+	for layer in layers:
+		if layer.layer_name == layer_name:
+			return layer
+	return null
 
 func _refresh() -> void:
 	if _renderer:
@@ -101,9 +110,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings := PackedStringArray()
 	if cell_size == Vector2.ZERO:
 		warnings.append("cell_size must not be zero.")
-	if backend == Backend.TILEMAP:
-		for layer_name in layers:
-			var layer: GridLayer = layers[layer_name]
-			if layer.tile_set == null:
-				warnings.append("Layer '%s': tile_set is required for TileMap backend." % layer_name)
+	for layer in layers:
+		if layer.layer_name.is_empty():
+			warnings.append("A layer has an empty layer_name.")
+		if backend == Backend.TILEMAP and layer.tile_set == null:
+			warnings.append("Layer '%s': tile_set is required for TileMap backend." % layer.layer_name)
 	return warnings
