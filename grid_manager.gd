@@ -24,7 +24,7 @@ func _ready() -> void:
 
 func show_layer(layer_name: String, cells: Array[Vector2i]) -> void:
 	if not layers.has(layer_name):
-		push_error("GridManager: unknown layer '%s'" % layer_name)
+		push_warning("GridManager: unknown layer '%s'" % layer_name)
 		return
 	_layer_cells[layer_name] = cells
 	layers[layer_name].visible = true
@@ -32,14 +32,14 @@ func show_layer(layer_name: String, cells: Array[Vector2i]) -> void:
 
 func hide_layer(layer_name: String) -> void:
 	if not layers.has(layer_name):
-		push_error("GridManager: unknown layer '%s'" % layer_name)
+		push_warning("GridManager: unknown layer '%s'" % layer_name)
 		return
 	layers[layer_name].visible = false
 	_refresh()
 
 func clear_layer(layer_name: String) -> void:
 	if not layers.has(layer_name):
-		push_error("GridManager: unknown layer '%s'" % layer_name)
+		push_warning("GridManager: unknown layer '%s'" % layer_name)
 		return
 	_layer_cells.erase(layer_name)
 	layers[layer_name].visible = false

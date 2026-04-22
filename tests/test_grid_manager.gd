@@ -54,3 +54,82 @@ func test_world_to_cell_hex_round_trips() -> void:
 	var original = Vector2i(3, 2)
 	var world = gm.cell_to_world(original)
 	assert_eq(gm.world_to_cell(world), original)
+
+# --- Layer API ---
+# These tests need _ready() to run so the renderer is created.
+
+func _make_gm_with_layer() -> GridManagerScript:
+	var mgr = GridManagerScript.new()
+	mgr.tile_shape = GridManagerScript.TileShape.SQUARE
+	mgr.cell_size = Vector2(64.0, 64.0)
+	mgr.grid_origin = Vector2.ZERO
+	var layer = GridLayerScript.new()
+	layer.fill_color = Color.BLUE
+	layer.z_index = 0
+	layer.visible = false
+	mgr.layers = {"movement": layer}
+	add_child_autofree(mgr)
+	return mgr
+
+func test_show_layer_stores_cells() -> void:
+	var mgr = _make_gm_with_layer()
+	var cells: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0)]
+	mgr.show_layer("movement", cells)
+	assert_eq(mgr._layer_cells["movement"], cells)
+
+func test_show_layer_sets_layer_visible() -> void:
+	var mgr = _make_gm_with_layer()
+	mgr.show_layer("movement", [Vector2i(0, 0)])
+	assert_true(mgr.layers["movement"].visible)
+
+func test_hide_layer_sets_invisible() -> void:
+	var mgr = _make_gm_with_layer()
+	mgr.show_layer("movement", [Vector2i(0, 0)])
+	mgr.hide_layer("movement")
+	assert_false(mgr.layers["movement"].visible)
+
+func test_hide_layer_preserves_cell_data() -> void:
+	var mgr = _make_gm_with_layer()
+	var cells: Array[Vector2i] = [Vector2i(2, 3)]
+	mgr.show_layer("movement", cells)
+	mgr.hide_layer("movement")
+	assert_eq(mgr._layer_cells["movement"], cells)
+
+func test_clear_layer_removes_cells() -> void:
+	var mgr = _make_gm_with_layer()
+	mgr.show_layer("movement", [Vector2i(0, 0)])
+	mgr.clear_layer("movement")
+	assert_false(mgr._layer_cells.has("movement"))
+
+func test_clear_layer_sets_invisible() -> void:
+	var mgr = _make_gm_with_layer()
+	mgr.show_layer("movement", [Vector2i(0, 0)])
+	mgr.clear_layer("movement")
+	assert_false(mgr.layers["movement"].visible)
+
+func test_clear_all_removes_all_cells() -> void:
+	var mgr = _make_gm_with_layer()
+	mgr.show_layer("movement", [Vector2i(0, 0)])
+	mgr.clear_all()
+	assert_eq(mgr._layer_cells.size(), 0)
+
+func test_clear_all_sets_all_layers_invisible() -> void:
+	var mgr = _make_gm_with_layer()
+	mgr.show_layer("movement", [Vector2i(0, 0)])
+	mgr.clear_all()
+	assert_false(mgr.layers["movement"].visible)
+
+func test_unknown_layer_does_not_crash_show() -> void:
+	var mgr = _make_gm_with_layer()
+	mgr.show_layer("nonexistent", [Vector2i(0, 0)])
+	assert_true(true)  # passes if no crash
+
+func test_unknown_layer_does_not_crash_hide() -> void:
+	var mgr = _make_gm_with_layer()
+	mgr.hide_layer("nonexistent")
+	assert_true(true)
+
+func test_unknown_layer_does_not_crash_clear() -> void:
+	var mgr = _make_gm_with_layer()
+	mgr.clear_layer("nonexistent")
+	assert_true(true)
