@@ -85,12 +85,12 @@ func _world_to_cell_hex(world_pos: Vector2) -> Vector2i:
 	# Inverse of: y = grid_origin.y + row * cell_size.y * 0.75 + cell_size.y * 0.5
 	var row := int(round((world_pos.y - grid_origin.y - cell_size.y * 0.5) / (cell_size.y * 0.75)))
 	# Inverse of: x = grid_origin.x + col * cell_size.x + (row % 2) * cell_size.x * 0.5 + cell_size.x * 0.5
-	var col := int(round((world_pos.x - grid_origin.x - (row % 2) * cell_size.x * 0.5 - cell_size.x * 0.5) / cell_size.x))
+	var col := int(round((world_pos.x - grid_origin.x - posmod(row, 2) * cell_size.x * 0.5 - cell_size.x * 0.5) / cell_size.x))
 	return Vector2i(col, row)
 
 func _cell_to_world_hex(cell: Vector2i) -> Vector2:
 	# Pointy-top hex, odd-row offset
-	var x := grid_origin.x + cell.x * cell_size.x + (cell.y % 2) * cell_size.x * 0.5 + cell_size.x * 0.5
+	var x := grid_origin.x + cell.x * cell_size.x + posmod(cell.y, 2) * cell_size.x * 0.5 + cell_size.x * 0.5
 	var y := grid_origin.y + cell.y * cell_size.y * 0.75 + cell_size.y * 0.5
 	return Vector2(x, y)
 
