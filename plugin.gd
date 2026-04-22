@@ -5,9 +5,16 @@ func _enter_tree() -> void:
 	add_custom_type(
 		"GridManager",
 		"Node2D",
-		preload("res://grid_manager.gd"),
-		preload("res://icon.svg")
+		preload("./grid_manager.gd"),
+		preload("./icon.svg")
+	)
+	add_custom_type(
+		"GridLayer",
+		"Resource",
+		preload("./grid_layer.gd"),
+		null
 	)
 
 func _exit_tree() -> void:
 	remove_custom_type("GridManager")
+	remove_custom_type("GridLayer")

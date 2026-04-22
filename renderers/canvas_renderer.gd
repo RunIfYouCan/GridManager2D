@@ -16,6 +16,7 @@ func render(layer_cells: Dictionary, grid_config: GridConfig, layers: Dictionary
 func clear() -> void:
 	_layer_cells = {}
 	_layers = {}
+	_grid_config = null
 	queue_redraw()
 
 func _draw() -> void:

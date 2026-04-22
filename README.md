@@ -119,7 +119,7 @@ This project uses the **GUT** testing framework. Run all tests:
 
 ```bash
 cd /path/to/GridManager2d
-godot --headless -s addons/gut/gut_cli.gd
+godot --headless -s addons/gut/gut_cmdln.gd
 ```
 
 Test files are located in `tests/` and cover:

@@ -4,6 +4,9 @@ extends Node2D
 enum Backend { CANVAS, TILEMAP }
 enum TileShape { SQUARE, HEX }
 
+const _CanvasRendererScript = preload("./renderers/canvas_renderer.gd")
+const _TileMapRendererScript = preload("./renderers/tilemap_renderer.gd")
+
 @export var backend: Backend = Backend.CANVAS
 @export var tile_shape: TileShape = TileShape.SQUARE
 @export var cell_size: Vector2 = Vector2(64.0, 64.0)
@@ -15,9 +18,9 @@ var _layer_cells: Dictionary = {}  # String -> Array[Vector2i]
 
 func _ready() -> void:
 	if backend == Backend.CANVAS:
-		_renderer = load("res://renderers/canvas_renderer.gd").new()
+		_renderer = _CanvasRendererScript.new()
 	else:
-		_renderer = load("res://renderers/tilemap_renderer.gd").new()
+		_renderer = _TileMapRendererScript.new()
 	add_child(_renderer)
 
 # --- Public API ---
