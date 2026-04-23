@@ -26,7 +26,7 @@ func _ready() -> void:
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := PackedStringArray()
+	var warnings: PackedStringArray = PackedStringArray()
 	if cell_size == Vector2.ZERO:
 		warnings.append("cell_size must not be zero.")
 	for layer in layers:
@@ -47,7 +47,7 @@ func get_warnings() -> PackedStringArray:
 
 
 func show_layer(layer_name: String, cells: Array[Vector2i]) -> void:
-	var layer := find_layer(layer_name)
+	var layer: GridLayer = find_layer(layer_name)
 	if layer == null:
 		push_warning("GridManager: unknown layer '%s'" % layer_name)
 		return
@@ -57,7 +57,7 @@ func show_layer(layer_name: String, cells: Array[Vector2i]) -> void:
 
 
 func hide_layer(layer_name: String) -> void:
-	var layer := find_layer(layer_name)
+	var layer: GridLayer = find_layer(layer_name)
 	if layer == null:
 		push_warning("GridManager: unknown layer '%s'" % layer_name)
 		return
@@ -66,7 +66,7 @@ func hide_layer(layer_name: String) -> void:
 
 
 func clear_layer(layer_name: String) -> void:
-	var layer := find_layer(layer_name)
+	var layer: GridLayer = find_layer(layer_name)
 	if layer == null:
 		push_warning("GridManager: unknown layer '%s'" % layer_name)
 		return
@@ -114,7 +114,7 @@ func _make_config() -> GridConfig:
 
 
 func _world_to_cell_square(world_pos: Vector2) -> Vector2i:
-	var local := world_pos - grid_origin
+	var local: Vector2 = world_pos - grid_origin
 	return Vector2i(int(floor(local.x / cell_size.x)), int(floor(local.y / cell_size.y)))
 
 
@@ -128,20 +128,22 @@ func _cell_to_world_square(cell: Vector2i) -> Vector2:
 func _world_to_cell_hex(world_pos: Vector2) -> Vector2i:
 	# Pointy-top hex, odd-row offset
 	# Inverse of: y = grid_origin.y + row * cell_size.y * 0.75 + cell_size.y * 0.5
-	var row := int(
+	var row: int = int(
 		round((world_pos.y - grid_origin.y - cell_size.y * 0.5) / (cell_size.y * 0.75))
 	)
 	# Inverse of: x = grid_origin.x + col * cell_size.x + (row%2)*cell_size.x*0.5 + cell_size.x*0.5
-	var offset := posmod(row, 2) * cell_size.x * 0.5
-	var col := int(round((world_pos.x - grid_origin.x - offset - cell_size.x * 0.5) / cell_size.x))
+	var offset: float = posmod(row, 2) * cell_size.x * 0.5
+	var col: int = int(
+		round((world_pos.x - grid_origin.x - offset - cell_size.x * 0.5) / cell_size.x)
+	)
 	return Vector2i(col, row)
 
 
 func _cell_to_world_hex(cell: Vector2i) -> Vector2:
 	# Pointy-top hex, odd-row offset
-	var x := (
+	var x: float = (
 		grid_origin.x + cell.x * cell_size.x + posmod(cell.y, 2) * cell_size.x * 0.5
 		+ cell_size.x * 0.5
 	)
-	var y := grid_origin.y + cell.y * cell_size.y * 0.75 + cell_size.y * 0.5
+	var y: float = grid_origin.y + cell.y * cell_size.y * 0.75 + cell_size.y * 0.5
 	return Vector2(x, y)

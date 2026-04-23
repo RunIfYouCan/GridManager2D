@@ -1,6 +1,6 @@
 extends GutTest
 
-var gm
+var gm: GridManager
 
 
 func before_each() -> void:
@@ -55,35 +55,35 @@ func test_cell_to_world_hex_odd_row_offset() -> void:
 
 func test_world_to_cell_hex_round_trips() -> void:
 	gm.tile_shape = GridManager.TileShape.HEX
-	var original = Vector2i(3, 2)
-	var world = gm.cell_to_world(original)
+	var original: Vector2i = Vector2i(3, 2)
+	var world: Vector2 = gm.cell_to_world(original)
 	assert_eq(gm.world_to_cell(world), original)
 
 # --- Layer API ---
 
 
 func test_show_layer_stores_cells() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	var cells: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0)]
 	mgr.show_layer("movement", cells)
 	assert_eq(mgr.layer_cells["movement"], cells)
 
 
 func test_show_layer_sets_layer_visible() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	mgr.show_layer("movement", [Vector2i(0, 0)])
 	assert_true(mgr.find_layer("movement").visible)
 
 
 func test_hide_layer_sets_invisible() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	mgr.show_layer("movement", [Vector2i(0, 0)])
 	mgr.hide_layer("movement")
 	assert_false(mgr.find_layer("movement").visible)
 
 
 func test_hide_layer_preserves_cell_data() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	var cells: Array[Vector2i] = [Vector2i(2, 3)]
 	mgr.show_layer("movement", cells)
 	mgr.hide_layer("movement")
@@ -91,47 +91,47 @@ func test_hide_layer_preserves_cell_data() -> void:
 
 
 func test_clear_layer_removes_cells() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	mgr.show_layer("movement", [Vector2i(0, 0)])
 	mgr.clear_layer("movement")
 	assert_false(mgr.layer_cells.has("movement"))
 
 
 func test_clear_layer_sets_invisible() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	mgr.show_layer("movement", [Vector2i(0, 0)])
 	mgr.clear_layer("movement")
 	assert_false(mgr.find_layer("movement").visible)
 
 
 func test_clear_all_removes_all_cells() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	mgr.show_layer("movement", [Vector2i(0, 0)])
 	mgr.clear_all()
 	assert_eq(mgr.layer_cells.size(), 0)
 
 
 func test_clear_all_sets_all_layers_invisible() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	mgr.show_layer("movement", [Vector2i(0, 0)])
 	mgr.clear_all()
 	assert_false(mgr.find_layer("movement").visible)
 
 
 func test_unknown_layer_does_not_crash_show() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	mgr.show_layer("nonexistent", [Vector2i(0, 0)])
 	assert_true(true)
 
 
 func test_unknown_layer_does_not_crash_hide() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	mgr.hide_layer("nonexistent")
 	assert_true(true)
 
 
 func test_unknown_layer_does_not_crash_clear() -> void:
-	var mgr := _make_gm_with_layer()
+	var mgr: GridManager = _make_gm_with_layer()
 	mgr.clear_layer("nonexistent")
 	assert_true(true)
 
@@ -153,7 +153,7 @@ func test_warns_when_cell_size_is_zero() -> void:
 
 func test_warns_when_tilemap_layer_missing_tileset() -> void:
 	gm.backend = GridManager.Backend.TILEMAP
-	var layer := GridLayer.new()
+	var layer: GridLayer = GridLayer.new()
 	layer.layer_name = "attack"
 	layer.tile_set = null
 	var layers: Array[GridLayer] = [layer]
@@ -165,7 +165,7 @@ func test_warns_when_tilemap_layer_missing_tileset() -> void:
 
 func test_no_tileset_warning_for_canvas_backend() -> void:
 	gm.backend = GridManager.Backend.CANVAS
-	var layer := GridLayer.new()
+	var layer: GridLayer = GridLayer.new()
 	layer.layer_name = "attack"
 	layer.tile_set = null
 	var layers: Array[GridLayer] = [layer]
@@ -174,11 +174,11 @@ func test_no_tileset_warning_for_canvas_backend() -> void:
 
 
 func _make_gm_with_layer() -> GridManager:
-	var mgr := GridManager.new()
+	var mgr: GridManager = GridManager.new()
 	mgr.tile_shape = GridManager.TileShape.SQUARE
 	mgr.cell_size = Vector2(64.0, 64.0)
 	mgr.grid_origin = Vector2.ZERO
-	var layer := GridLayer.new()
+	var layer: GridLayer = GridLayer.new()
 	layer.layer_name = "movement"
 	layer.fill_color = Color.BLUE
 	layer.z_index = 0

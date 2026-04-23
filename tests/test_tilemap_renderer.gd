@@ -15,7 +15,7 @@ func test_render_creates_tile_map_layer_child() -> void:
 
 
 func test_render_does_not_duplicate_tile_map_layer() -> void:
-	var layer := _make_layer_with_tileset()
+	var layer: GridLayer = _make_layer_with_tileset()
 	var layers: Array[GridLayer] = [layer]
 	renderer.render({}, _make_config(), layers)
 	renderer.render({}, _make_config(), layers)
@@ -23,7 +23,7 @@ func test_render_does_not_duplicate_tile_map_layer() -> void:
 
 
 func test_render_sets_z_index_on_tile_map_layer() -> void:
-	var layer := _make_layer_with_tileset()
+	var layer: GridLayer = _make_layer_with_tileset()
 	layer.z_index = 5
 	renderer.render({}, _make_config(), [layer])
 	var tml: TileMapLayer = renderer.get_child(0)
@@ -31,7 +31,7 @@ func test_render_sets_z_index_on_tile_map_layer() -> void:
 
 
 func test_render_hides_invisible_layer() -> void:
-	var layer := _make_layer_with_tileset()
+	var layer: GridLayer = _make_layer_with_tileset()
 	layer.visible = false
 	renderer.render({}, _make_config(), [layer])
 	var tml: TileMapLayer = renderer.get_child(0)
@@ -39,7 +39,7 @@ func test_render_hides_invisible_layer() -> void:
 
 
 func test_clear_hides_all_tile_map_layers() -> void:
-	var layer := _make_layer_with_tileset()
+	var layer: GridLayer = _make_layer_with_tileset()
 	layer.visible = true
 	renderer.render({"movement": [Vector2i(0, 0)] as Array[Vector2i]}, _make_config(), [layer])
 	renderer.clear()
@@ -48,7 +48,7 @@ func test_clear_hides_all_tile_map_layers() -> void:
 
 
 func test_layer_without_tileset_does_not_create_child() -> void:
-	var layer := GridLayer.new()
+	var layer: GridLayer = GridLayer.new()
 	layer.layer_name = "broken"
 	layer.tile_set = null
 	renderer.render({}, _make_config(), [layer])
@@ -56,7 +56,7 @@ func test_layer_without_tileset_does_not_create_child() -> void:
 
 
 func _make_layer_with_tileset(name: String = "movement") -> GridLayer:
-	var l := GridLayer.new()
+	var l: GridLayer = GridLayer.new()
 	l.layer_name = name
 	l.z_index = 0
 	l.visible = true

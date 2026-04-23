@@ -31,7 +31,7 @@ func _create_tile_map_layer(layer: GridLayer) -> void:
 	if layer.tile_set == null:
 		push_warning("TileMapRenderer: layer '%s' has no tile_set assigned." % layer.layer_name)
 		return
-	var tml := TileMapLayer.new()
+	var tml: TileMapLayer = TileMapLayer.new()
 	tml.tile_set = layer.tile_set
 	tml.z_index = layer.z_index
 	add_child(tml)
