@@ -1,7 +1,8 @@
 class_name TileMapRenderer
-extends Node
+extends BaseRenderer
 
-var _tile_map_layers: Dictionary = {}  # String -> TileMapLayer
+var _tile_map_layers: Dictionary = { } # String -> TileMapLayer
+
 
 func render(layer_cells: Dictionary, _grid_config: GridConfig, layers: Array[GridLayer]) -> void:
 	for layer: GridLayer in layers:
@@ -19,10 +20,12 @@ func render(layer_cells: Dictionary, _grid_config: GridConfig, layers: Array[Gri
 		for cell in cells:
 			tml.set_cell(cell, layer.tile_source_id, layer.tile_atlas_coords)
 
+
 func clear() -> void:
 	for tml in _tile_map_layers.values():
 		tml.clear()
 		tml.visible = false
+
 
 func _create_tile_map_layer(layer: GridLayer) -> void:
 	if layer.tile_set == null:
